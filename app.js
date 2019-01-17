@@ -3,12 +3,10 @@ var app = express();
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
+var Sequelize = require('sequelize');
 
-
-var login = require('./controller/login');
+var admin = require('./controller/admin');
 var users = require('./controller/users');
-
-
 
 app.set('view engine', 'ejs');
 
@@ -26,13 +24,11 @@ app.use(session({
 	saveUninitialized: false
 }));
 
-app.use('/admin/login', login);
+app.use('/admin', admin);
 app.use('/admin/users', users);
 
 app.get('/', function (req, res) {
-
-  res.render('login_view/index', { title: 'Home',data:{"email":"randhir@isisdsn.net","password":"123456"},error:{} });
-  //res.render('login/index', { title: 'Home',data:{"email":"","password":""},error:{} });
+  	res.render('admin/login/index', { title: 'Home',data:{"email":"randhir@isisdsn.net","password":"123456"},error:{} });
 });
 
 app.listen(2213, function () {
