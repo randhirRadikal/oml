@@ -9,13 +9,13 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="../../assets/images/favicon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="<%= base_url %>assets/images/favicon.png">
     <title>Elite Admin Template - The Ultimate Multipurpose admin template</title>
     <!-- chartist CSS -->
-    <link href="../../assets/node_modules/morrisjs/morris.css" rel="stylesheet">
-    <link href="../../dist/css/pages/ecommerce.css" rel="stylesheet">
+    <link href="<%= base_url %>assets/node_modules/morrisjs/morris.css" rel="stylesheet">
+    <link href="<%= base_url %>dist/css/pages/ecommerce.css" rel="stylesheet">
     <!-- Custom CSS -->
-    <link href="../../dist/css/style.min.css" rel="stylesheet">
+    <link href="<%= base_url %>dist/css/style.min.css" rel="stylesheet">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -51,17 +51,17 @@
                         <b>
                             <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
                             <!-- Dark Logo icon -->
-                            <img src="../../assets/images/logo-icon.png" alt="homepage" class="dark-logo" />
+                            <img src="<%= base_url %>assets/images/logo-icon.png" alt="homepage" class="dark-logo" />
                             <!-- Light Logo icon -->
-                            <img src="../../assets/images/logo-light-icon.png" alt="homepage" class="light-logo" />
+                            <img src="<%= base_url %>assets/images/logo-light-icon.png" alt="homepage" class="light-logo" />
                         </b>
                         <!--End Logo icon -->
                         <!-- Logo text -->
 						<span>
                          	<!-- dark Logo text -->
-                         	<img src="../../assets/images/logo-text.png" alt="homepage" class="dark-logo" />
+                         	<img src="<%= base_url %>assets/images/logo-text.png" alt="homepage" class="dark-logo" />
                          	<!-- Light Logo text -->
-                         	<img src="../../assets/images/logo-light-text.png" class="light-logo" alt="homepage" />
+                         	<img src="<%= base_url %>assets/images/logo-light-text.png" class="light-logo" alt="homepage" />
 					 	</span>
 					</a>
                 </div>
@@ -79,6 +79,13 @@
                     <!-- User profile and search -->
                     <!-- ============================================================== -->
                     <ul class="navbar-nav my-lg-0">
+                        <!-- ============================================================== -->
+                        <!-- mega menu -->
+                        <!-- ============================================================== -->
+
+                        <!-- ============================================================== -->
+                        <!-- End mega menu -->
+                        <!-- ============================================================== -->
                         <li class="nav-item right-side-toggle">
 
 						</li>
@@ -121,58 +128,39 @@
                 <!-- ============================================================== -->
                 <!-- End Bread crumb and right sidebar toggle -->
                 <!-- ============================================================== -->
-                <div class="row">
-                    <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="row">
-									<div class="col-sm-6">
-										<h5 class="card-title">Venders List</h5>
-									</div>
-									<div class="col-sm-6 text-right">
-										<a href="add_edit/0" class="btn btn-success waves-effect waves-light m-r-10">Add</a>
-									</div>
-								</div>
-                                <div class="table-responsive m-t-30">
-                                    <table class="table product-overview">
-                                        <thead>
-                                            <tr>
-                                                <th>First Name</th>
-                                                <th>Last Name</th>
-                                                <th>Email</th>
-                                                <th>Phone Number</th>
-                                                <th>Status</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-											<% venderList.forEach(function(result,el){ %>
-                                            <tr>
-                                                <td><%= result.first_name %></td>
-                                                <td><%= result.last_name %></td>
-                                                <td><%= result.email %></td>
-                                                <td><%= result.phone_number %></td>
-                                                <td>
-													<% if(result.status == 1){ %>
-														<span class="label label-success">Active</span>
-													<% }else{ %>
-														<span class="label label-danger">Inactive</span>
-													<% } %>
-                                                </td>
-                                                <td>
-													<a href="add_edit/<%= result.id %>" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Edit">
-														<i class="ti-marker-alt"></i>
-													</a>
-													<a href="delete/<%= result.id %>" class="text-inverse" title="" data-toggle="tooltip" data-original-title="Delete">
-														<i class="ti-trash"></i>
-													</a>
-												</td>
-                                            </tr>
-											<% }); %>
-                                        </tbody>
-                                    </table>
+                <!-- ============================================================== -->
+
+                <!-- charts -->
+                <!-- ============================================================== -->
+
+                <!-- ============================================================== -->
+                <!-- charts -->
+                <!-- ============================================================== -->
+				<div class="row">
+                    <div class="col-sm-12">
+                        <div class="card card-body">
+                            <form class="form-horizontal m-t-40" action="" method="post">
+								<input type="hidden" id="id" name="id" value="<%= data.id %>">
+								<div class="form-group">
+                                    <label>First Name</label>
+                                    <input type="text" id="first_name" name="first_name" class="form-control" placeholder="First Name" value="<%= data.first_name %>" required>
                                 </div>
-                            </div>
+								<div class="form-group">
+                                    <label>Last Name</label>
+                                    <input type="text" id="last_name" name="last_name" class="form-control" placeholder="Last Name" value="<%= data.last_name %>" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="example-email">Email</label>
+                                    <input type="email" id="email" name="email" class="form-control" placeholder="Email" value="<%= data.email %>" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Phone Number</label>
+                                    <input type="text" id="phone_number" name="phone_number" class="form-control" placeholder="Phone Number" value="<%= data.phone_number %>" required>
+                                </div>
+
+								<button type="button" class="btn btn-inverse waves-effect waves-light" onclick="window.history.back();">Cancel</button>
+								<button type="submit" class="btn btn-info waves-effect waves-light m-r-10">Submit</button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -203,30 +191,30 @@
     <!-- ============================================================== -->
     <!-- All Jquery -->
     <!-- ============================================================== -->
-    <script src="../../assets/node_modules/jquery/jquery-3.2.1.min.js"></script>
+    <script src="<%= base_url %>assets/node_modules/jquery/jquery-3.2.1.min.js"></script>
     <!-- Bootstrap tether Core JavaScript -->
-    <script src="../../assets/node_modules/popper/popper.min.js"></script>
-    <script src="../../assets/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="<%= base_url %>assets/node_modules/popper/popper.min.js"></script>
+    <script src="<%= base_url %>assets/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- slimscrollbar scrollbar JavaScript -->
-    <script src="../../dist/js/perfect-scrollbar.jquery.min.js"></script>
+    <script src="<%= base_url %>dist/js/perfect-scrollbar.jquery.min.js"></script>
     <!--Wave Effects -->
-    <script src="../../dist/js/waves.js"></script>
+    <script src="<%= base_url %>dist/js/waves.js"></script>
     <!--Menu sidebar -->
-    <script src="../../dist/js/sidebarmenu.js"></script>
+    <script src="<%= base_url %>dist/js/sidebarmenu.js"></script>
     <!--stickey kit -->
-    <script src="../../assets/node_modules/sticky-kit-master/dist/sticky-kit.min.js"></script>
-    <script src="../../assets/node_modules/sparkline/jquery.sparkline.min.js"></script>
+    <script src="<%= base_url %>assets/node_modules/sticky-kit-master/dist/sticky-kit.min.js"></script>
+    <script src="<%= base_url %>assets/node_modules/sparkline/jquery.sparkline.min.js"></script>
     <!--Custom JavaScript -->
-    <script src="../../dist/js/custom.min.js"></script>
-    <script src="../../assets/node_modules/jquery-sparkline/jquery.sparkline.min.js"></script>
+    <script src="<%= base_url %>dist/js/custom.min.js"></script>
+    <script src="<%= base_url %>assets/node_modules/jquery-sparkline/jquery.sparkline.min.js"></script>
     <!-- ============================================================== -->
     <!-- This page plugins -->
     <!-- ============================================================== -->
     <!--morris JavaScript -->
-    <script src="../../assets/node_modules/raphael/raphael-min.js"></script>
-    <script src="../../assets/node_modules/morrisjs/morris.min.js"></script>
+    <script src="<%= base_url %>assets/node_modules/raphael/raphael-min.js"></script>
+    <script src="<%= base_url %>assets/node_modules/morrisjs/morris.min.js"></script>
     <!--Custom JavaScript -->
-    <script src="../../dist/js/ecom-dashboard.js"></script>
+    <script src="<%= base_url %>dist/js/ecom-dashboard.js"></script>
 </body>
 
 </html>

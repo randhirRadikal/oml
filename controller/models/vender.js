@@ -5,7 +5,8 @@ var Venders;
 
 var getVenderList = function(callback){
 	Venders.findAll({
-		attributes:['id','first_name','last_name','email','phone_number','profile_pic','status']
+		attributes:['id','first_name','last_name','email','phone_number','profile_pic','status'],
+		where:{"is_deleted":0}
 	}).then(function(res){
 		var data = JSON.parse(JSON.stringify(res));
 		callback(data);
@@ -28,12 +29,46 @@ var getVenderDetails = function(id,callback){
 	});
 };
 
-var addEditVender = function(data,callback){
-	if(data.id){
-		//update
+var addUpdate = function(data,callback){
+	console.log(data);
+	var venderId = data.id;
+	delete data.id;
+	if(venderId != "0"){
+		Venders.update(data,{
+				where:{
+					id:{
+						$eq:venderId
+					}
+				}
+			}).then(function(res){
+				callback(true);
+			}).catch(function(err){
+				console.log(err);
+				callback(false);
+			});
 	}else{
-		//create
+		Venders.create(data).then(function(res){
+			callback(true);
+		}).catch(function(err){
+			console.log(err);
+			callback(false);
+		});
 	}
+};
+
+var deleteVender = function(venderId,callback){
+	Venders.update({is_deleted:1},{
+			where:{
+				id:{
+					$eq:venderId
+				}
+			}
+		}).then(function(res){
+			callback(true);
+		}).catch(function(err){
+			console.log(err);
+			callback(false);
+		});
 };
 
 module.exports = function(con){
@@ -79,7 +114,9 @@ module.exports = function(con){
 	});
 	return {
 		getVenderList:getVenderList,
-		getVenderDetails:getVenderDetails
+		getVenderDetails:getVenderDetails,
+		addUpdate:addUpdate,
+		deleteVender:deleteVender
 	};
 
 };

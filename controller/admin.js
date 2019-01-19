@@ -20,8 +20,8 @@ var orm = new Sequelize('freelancer_oml','root','',{
 });
 
 var Admins = require('./models/admin')(orm);
-var Verders = require('./models/vender')(orm);
-var Verders = require('./models/vender')(orm);
+var Venders = require('./models/vender')(orm);
+var Users = require('./models/vender')(orm);
 
 router.get('/',function(req,res){
 	res.render('admin/login/index', { base_url:base_url,title: 'Home',data:{"username":"randhirjha2212@gmail.com","password":"123456"},error:false });
@@ -53,14 +53,14 @@ router.get('/dashboard',function(req,res){
 });
 
 router.get('/venders',function(req,res){
-	Verders.getVenderList(function(response){
+	Venders.getVenderList(function(response){
 		res.render('admin/venders/index', { base_url:base_url,title: 'Home',venderList:response,error:false });
 	});
 });
 
 router.get('/venders/delete/:id',function(req,res){
-	Verders.getVenderList(function(response){
-		res.render('admin/venders/index', { base_url:base_url,title: 'Home',venderList:response,error:false });
+	Venders.deleteVender(req.params.id,function(response){
+		res.redirect('/admin/venders');
 	});
 });
 
@@ -74,10 +74,25 @@ router.get('/venders/add_edit/:id',function(req,res){
 			phone_number:""
 		},error:false });
 	}else{
-		Verders.getVenderDetails(req.params.id,function(response){
+		Venders.getVenderDetails(req.params.id,function(response){
 			res.render('admin/venders/add_edit', { base_url:base_url,title: 'Home',data:response,error:false });
 		});
 	}
+});
+
+router.post('/venders/add_edit/:id',function(req,res){
+	if(req.body.first_name && req.body.last_name && req.body.email && req.body.phone_number ){
+		Venders.addUpdate(req.body,function(response){
+			if(response){
+				res.redirect('/admin/venders');
+			}else{
+				res.render('admin/venders/add_edit', { base_url:base_url,title: 'Home',data:req.body,error:"Something wrong, please try again later." });
+			}
+		});
+	}else{
+		res.render('admin/venders/add_edit', { base_url:base_url,title: 'Home',data:req.body,error:"Please send all required fields." });
+	}
+
 });
 
 router.get('/users',function(req,res){
