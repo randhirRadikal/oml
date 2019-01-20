@@ -21,7 +21,7 @@ var orm = new Sequelize('freelancer_oml','root','',{
 
 var Admins = require('./models/admin')(orm);
 var Venders = require('./models/vender')(orm);
-var Users = require('./models/vender')(orm);
+var Users = require('./models/user')(orm);
 
 router.get('/',function(req,res){
 	res.render('admin/login/index', { base_url:base_url,title: 'Home',data:{"username":"randhirjha2212@gmail.com","password":"123456"},error:false });
@@ -96,7 +96,46 @@ router.post('/venders/add_edit/:id',function(req,res){
 });
 
 router.get('/users',function(req,res){
-	res.render('admin/users/index', { base_url:base_url,title: 'Home',data:{"username":"randhirjha2212@gmail.com","password":"123456"},error:false });
+	Users.getList(function(response){
+		res.render('admin/users/index', { base_url:base_url,title: 'Home',userList:response,error:false });
+	});
+});
+
+router.get('/users/add_edit/:id',function(req,res){
+	if(req.params.id == "0"){
+		res.render('admin/users/add_edit', { base_url:base_url,title: 'Home',data:{
+			first_name:"",
+			last_name:"",
+			email:"",
+			id:"0",
+			phone_number:""
+		},error:false });
+	}else{
+		Users.getDetails(req.params.id,function(response){
+			res.render('admin/users/add_edit', { base_url:base_url,title: 'Home',data:response,error:false });
+		});
+	}
+});
+
+router.post('/users/add_edit/:id',function(req,res){
+	if(req.body.first_name && req.body.last_name && req.body.email && req.body.phone_number ){
+		Users.addUpdate(req.body,function(response){
+			if(response){
+				res.redirect('/admin/users');
+			}else{
+				res.render('admin/users/add_edit', { base_url:base_url,title: 'Home',data:req.body,error:"Something wrong, please try again later." });
+			}
+		});
+	}else{
+		res.render('admin/users/add_edit', { base_url:base_url,title: 'Home',data:req.body,error:"Please send all required fields." });
+	}
+
+});
+
+router.get('/users/delete/:id',function(req,res){
+	Users.deleteOne(req.params.id,function(response){
+		res.redirect('/admin/venders');
+	});
 });
 
 

@@ -115,7 +115,7 @@
                 <!-- ============================================================== -->
                 <div class="row page-titles">
                     <div class="col-md-5 align-self-center">
-                        <h4 class="text-themecolor">Venders</h4>
+                        <h4 class="text-themecolor">Users</h4>
                     </div>
                 </div>
                 <!-- ============================================================== -->
@@ -127,7 +127,7 @@
                             <div class="card-body">
                                 <div class="row">
 									<div class="col-sm-6">
-										<h5 class="card-title">Venders List</h5>
+										<h5 class="card-title">User List</h5>
 									</div>
 									<div class="col-sm-6 text-right">
 										<a href="add_edit/0" class="btn btn-success waves-effect waves-light m-r-10">Add</a>
@@ -146,7 +146,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-											<% venderList.forEach(function(result,el){ %>
+											<% userList.forEach(function(result,el){ %>
                                             <tr>
                                                 <td><%= result.first_name %></td>
                                                 <td><%= result.last_name %></td>

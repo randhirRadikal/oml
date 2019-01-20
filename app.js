@@ -7,6 +7,8 @@ var Sequelize = require('sequelize');
 
 var admin = require('./controller/admin');
 var users = require('./controller/users');
+var apiUser = require('./controller/api/user');
+var apiVender = require('./controller/api/vender');
 
 app.set('view engine', 'ejs');
 
@@ -26,6 +28,8 @@ app.use(session({
 
 app.use('/admin', admin);
 app.use('/admin/users', users);
+app.use('/api/user', apiUser);
+app.use('/api/vender', apiVender);
 
 app.get('/', function (req, res) {
   	res.render('admin/login/index', { title: 'Home',data:{"email":"randhir@isisdsn.net","password":"123456"},error:{} });

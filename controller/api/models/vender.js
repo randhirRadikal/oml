@@ -1,10 +1,10 @@
 var Sequelize = require('sequelize');
 var connection;
-var Users;
+var Venders;
 
 
-var getList = function(callback){
-	Users.findAll({
+var getVenderList = function(callback){
+	Venders.findAll({
 		attributes:['id','first_name','last_name','email','phone_number','profile_pic','status'],
 		where:{"is_deleted":0}
 	}).then(function(res){
@@ -16,8 +16,8 @@ var getList = function(callback){
 	});
 };
 
-var getDetails = function(id,callback){
-	Users.findOne({
+var getVenderDetails = function(id,callback){
+	Venders.findOne({
 		attributes:['id','first_name','last_name','email','phone_number'],
 		where:{"id":id}
 	}).then(function(res){
@@ -31,13 +31,13 @@ var getDetails = function(id,callback){
 
 var addUpdate = function(data,callback){
 	console.log(data);
-	var id = data.id;
+	var venderId = data.id;
 	delete data.id;
-	if(id != "0"){
-		Users.update(data,{
+	if(venderId != "0"){
+		Venders.update(data,{
 				where:{
 					id:{
-						$eq:id
+						$eq:venderId
 					}
 				}
 			}).then(function(res){
@@ -47,7 +47,7 @@ var addUpdate = function(data,callback){
 				callback(false);
 			});
 	}else{
-		Users.create(data).then(function(res){
+		Venders.create(data).then(function(res){
 			callback(true);
 		}).catch(function(err){
 			console.log(err);
@@ -56,8 +56,8 @@ var addUpdate = function(data,callback){
 	}
 };
 
-var deleteOne = function(venderId,callback){
-	Users.update({is_deleted:1},{
+var deleteVender = function(venderId,callback){
+	Venders.update({is_deleted:1},{
 			where:{
 				id:{
 					$eq:venderId
@@ -73,7 +73,7 @@ var deleteOne = function(venderId,callback){
 
 module.exports = function(con){
 	connection = con;
-	Users = con.define('users',{
+	Venders = con.define('venders',{
 		id:{
 			field: 'id',
 			type: Sequelize.INTEGER,
@@ -103,22 +103,6 @@ module.exports = function(con){
 		    type: Sequelize.STRING,
 		    field: 'profile_pic'
 		},
-		access_token: {
-		    type: Sequelize.STRING,
-		    field: 'access_token'
-		},
-		verification_code: {
-		    type: Sequelize.STRING,
-		    field: 'verification_code'
-		},
-		last_login_ip: {
-		    type: Sequelize.STRING,
-		    field: 'last_login_ip'
-		},
-		last_login_time: {
-		    type: Sequelize.DATE,
-		    field: 'last_login_time'
-		},
 		is_deleted: {
 		    type: Sequelize.INTEGER,
 		    field: 'is_deleted'
@@ -129,10 +113,10 @@ module.exports = function(con){
 		}
 	});
 	return {
-		getList:getList,
-		getDetails:getDetails,
+		getVenderList:getVenderList,
+		getVenderDetails:getVenderDetails,
 		addUpdate:addUpdate,
-		deleteOne:deleteOne
+		deleteVender:deleteVender
 	};
 
 };

@@ -2,24 +2,10 @@ var Sequelize = require('sequelize');
 var connection;
 var Users;
 
-
-var getList = function(callback){
-	Users.findAll({
-		attributes:['id','first_name','last_name','email','phone_number','profile_pic','status'],
-		where:{"is_deleted":0}
-	}).then(function(res){
-		var data = JSON.parse(JSON.stringify(res));
-		callback(data);
-	}).catch(function(err){
-		console.log(err);
-		callback([]);
-	});
-};
-
-var getDetails = function(id,callback){
+var login = function(email,password,callback){
 	Users.findOne({
-		attributes:['id','first_name','last_name','email','phone_number'],
-		where:{"id":id}
+		attributes:['id','first_name','last_name','email','phone_number','access_token'],
+		where:{"email":email,"password":password}
 	}).then(function(res){
 		var data = JSON.parse(JSON.stringify(res));
 		callback(data);
@@ -128,11 +114,54 @@ module.exports = function(con){
 		    field: 'status'
 		}
 	});
+
+	UserAddress = con.define('users_addresses',{
+		id:{
+			field: 'id',
+			type: Sequelize.INTEGER,
+			primaryKey: true,
+			autoIncrement: true
+		},
+		address1:{
+			field:'address1',
+			type:Sequelize.STRING
+		},
+		address2:{
+			field:'address2',
+			type:Sequelize.STRING
+		},
+		city:{
+			field:'city',
+			type:Sequelize.STRING
+		},
+		state_id:{
+			field:'state_id',
+			type:Sequelize.INTEGER
+		},
+		country_id:{
+			field:'country_id',
+			type:Sequelize.INTEGER
+		},
+		zip_code:{
+			field:'zip_code',
+			type:Sequelize.STRING
+		},
+		title:{
+			field:'title',
+			type:Sequelize.STRING
+		},
+		is_deleted:{
+			field:'is_deleted',
+			type:Sequelize.INTEGER
+		},
+		status:{
+			field:'status',
+			type:Sequelize.INTEGER
+		}
+	});
+
 	return {
-		getList:getList,
-		getDetails:getDetails,
-		addUpdate:addUpdate,
-		deleteOne:deleteOne
+		login:login,
 	};
 
 };
