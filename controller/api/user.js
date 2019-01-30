@@ -35,7 +35,7 @@ router.get('/',function(req,res){
 
 router.post('/login',function(req,res){
 	if(req.body.email && req.body.password){
-		Users.login(req.body.email,req.body.password,function(response){
+		Users.login(req.body.email,req.body.password,'Buyer',function(response){
 			if(response){
 				res.json({
 							"error_code":0,

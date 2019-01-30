@@ -20,8 +20,8 @@ var orm = new Sequelize('freelancer_oml','root','',{
 });
 
 var Admins = require('./models/admin')(orm);
-var Venders = require('./models/vender')(orm);
 var Users = require('./models/user')(orm);
+var ProductTypes = require('./models/product_type')(orm);
 
 router.get('/',function(req,res){
 	res.render('admin/login/index', { base_url:base_url,title: 'Home',data:{"username":"randhirjha2212@gmail.com","password":"123456"},error:false });
@@ -53,13 +53,13 @@ router.get('/dashboard',function(req,res){
 });
 
 router.get('/venders',function(req,res){
-	Venders.getVenderList(function(response){
+	Users.getList('Seller',function(response){
 		res.render('admin/venders/index', { base_url:base_url,title: 'Home',venderList:response,error:false });
 	});
 });
 
 router.get('/venders/delete/:id',function(req,res){
-	Venders.deleteVender(req.params.id,function(response){
+	Users.deleteOne(req.params.id,function(response){
 		res.redirect('/admin/venders');
 	});
 });
@@ -67,22 +67,22 @@ router.get('/venders/delete/:id',function(req,res){
 router.get('/venders/add_edit/:id',function(req,res){
 	if(req.params.id == "0"){
 		res.render('admin/venders/add_edit', { base_url:base_url,title: 'Home',data:{
-			first_name:"",
-			last_name:"",
+			name:"",
 			email:"",
 			id:"0",
 			phone_number:""
 		},error:false });
 	}else{
-		Venders.getVenderDetails(req.params.id,function(response){
+		Users.getDetails(req.params.id,function(response){
 			res.render('admin/venders/add_edit', { base_url:base_url,title: 'Home',data:response,error:false });
 		});
 	}
 });
 
 router.post('/venders/add_edit/:id',function(req,res){
-	if(req.body.first_name && req.body.last_name && req.body.email && req.body.phone_number ){
-		Venders.addUpdate(req.body,function(response){
+	if(req.body.name && req.body.email && req.body.phone_number ){
+		req.body.type = "Seller";
+		Users.addUpdate(req.body,function(response){
 			if(response){
 				res.redirect('/admin/venders');
 			}else{
@@ -96,7 +96,7 @@ router.post('/venders/add_edit/:id',function(req,res){
 });
 
 router.get('/users',function(req,res){
-	Users.getList(function(response){
+	Users.getList('Buyer',function(response){
 		res.render('admin/users/index', { base_url:base_url,title: 'Home',userList:response,error:false });
 	});
 });
@@ -104,8 +104,7 @@ router.get('/users',function(req,res){
 router.get('/users/add_edit/:id',function(req,res){
 	if(req.params.id == "0"){
 		res.render('admin/users/add_edit', { base_url:base_url,title: 'Home',data:{
-			first_name:"",
-			last_name:"",
+			name:"",
 			email:"",
 			id:"0",
 			phone_number:""
@@ -118,7 +117,8 @@ router.get('/users/add_edit/:id',function(req,res){
 });
 
 router.post('/users/add_edit/:id',function(req,res){
-	if(req.body.first_name && req.body.last_name && req.body.email && req.body.phone_number ){
+	if(req.body.name && req.body.email && req.body.phone_number ){
+		req.body.type = "Buyer";
 		Users.addUpdate(req.body,function(response){
 			if(response){
 				res.redirect('/admin/users');
@@ -136,6 +136,47 @@ router.get('/users/delete/:id',function(req,res){
 	Users.deleteOne(req.params.id,function(response){
 		res.redirect('/admin/venders');
 	});
+});
+
+router.get('/product_type',function(req,res){
+	ProductTypes.getList(function(response){
+		res.render('admin/product_type/index', { base_url:base_url,title: 'Home',venderList:response,error:false });
+	});
+});
+
+router.get('/product_type/delete/:id',function(req,res){
+	ProductTypes.deleteOne(req.params.id,function(response){
+		res.redirect('/admin/product_type');
+	});
+});
+
+router.get('/product_type/add_edit/:id',function(req,res){
+	if(req.params.id == "0"){
+		res.render('admin/product_type/add_edit', { base_url:base_url,title: 'Home',data:{
+			name:"",
+			status:"",
+			id:"0"
+		},error:false });
+	}else{
+		ProductTypes.getDetails(req.params.id,function(response){
+			res.render('admin/product_type/add_edit', { base_url:base_url,title: 'Home',data:response,error:false });
+		});
+	}
+});
+
+router.post('/product_type/add_edit/:id',function(req,res){
+	if(req.body.name){
+		ProductTypes.addUpdate(req.body,function(response){
+			if(response){
+				res.redirect('/admin/product_type');
+			}else{
+				res.render('admin/product_type/add_edit', { base_url:base_url,title: 'Home',data:req.body,error:"Something wrong, please try again later." });
+			}
+		});
+	}else{
+		res.render('admin/product_type/add_edit', { base_url:base_url,title: 'Home',data:req.body,error:"Please send all required fields." });
+	}
+
 });
 
 

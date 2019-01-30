@@ -3,10 +3,10 @@ var connection;
 var Users;
 
 
-var getList = function(callback){
+var getList = function(type,callback){
 	Users.findAll({
-		attributes:['id','first_name','last_name','email','phone_number','profile_pic','status'],
-		where:{"is_deleted":0}
+		attributes:['id','name','email','phone_number','profile_pic','status'],
+		where:{"is_deleted":0,"type":type}
 	}).then(function(res){
 		var data = JSON.parse(JSON.stringify(res));
 		callback(data);
@@ -18,7 +18,7 @@ var getList = function(callback){
 
 var getDetails = function(id,callback){
 	Users.findOne({
-		attributes:['id','first_name','last_name','email','phone_number'],
+		attributes:['id','name','email','phone_number'],
 		where:{"id":id}
 	}).then(function(res){
 		var data = JSON.parse(JSON.stringify(res));
@@ -79,25 +79,21 @@ module.exports = function(con){
 			type: Sequelize.INTEGER,
 			primaryKey: true
 		},
-		first_name: {
+		name: {
 		    type: Sequelize.STRING,
-		    field: 'first_name'
-		},
-		last_name: {
-		    type: Sequelize.STRING,
-		    field: 'last_name'
+		    field: 'name'
 		},
 		email: {
 		    type: Sequelize.STRING,
 		    field: 'email'
 		},
-		phone_number: {
-		    type: Sequelize.STRING,
-		    field: 'phone_number'
-		},
 		password: {
 		    type: Sequelize.STRING,
 		    field: 'password'
+		},
+		phone_number: {
+		    type: Sequelize.STRING,
+		    field: 'phone_number'
 		},
 		profile_pic: {
 		    type: Sequelize.STRING,
@@ -110,6 +106,14 @@ module.exports = function(con){
 		verification_code: {
 		    type: Sequelize.STRING,
 		    field: 'verification_code'
+		},
+		type: {
+		    type: Sequelize.STRING,
+		    field: 'type'
+		},
+		otp: {
+		    type: Sequelize.INTEGER,
+		    field: 'otp'
 		},
 		last_login_ip: {
 		    type: Sequelize.STRING,

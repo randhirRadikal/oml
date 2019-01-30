@@ -2,10 +2,37 @@ var Sequelize = require('sequelize');
 var connection;
 var Users;
 
-var login = function(email,password,callback){
+var login = function(email,password,type,callback){
 	Users.findOne({
-		attributes:['id','first_name','last_name','email','phone_number','access_token'],
-		where:{"email":email,"password":password}
+		attributes:['id','name','email','phone_number','access_token'],
+		where:{"email":email,"password":password,"type":type}
+	}).then(function(res){
+		var data = JSON.parse(JSON.stringify(res));
+		callback(data);
+	}).catch(function(err){
+		console.log(err);
+		callback([]);
+	});
+};
+
+var getList = function(type,callback){
+	Users.findAll({
+		attributes:['id','name','email','phone_number','profile_pic','status'],
+		where:{"is_deleted":0,"type":type}
+	}).then(function(res){
+		var data = JSON.parse(JSON.stringify(res));
+		callback(data);
+	}).catch(function(err){
+		console.log(err);
+		callback([]);
+	});
+};
+
+var getKitchenList = function(venderId,callback){
+	console.log(venderId);
+	Users.findAll({
+		attributes:['id','name','email','phone_number','profile_pic','status'],
+		where:{"vender_id":venderId,"type":"Kitchen"}
 	}).then(function(res){
 		var data = JSON.parse(JSON.stringify(res));
 		callback(data);
@@ -17,7 +44,10 @@ var login = function(email,password,callback){
 
 var addUpdate = function(data,callback){
 	console.log(data);
-	var id = data.id;
+	var id = "0";
+	if(data.id){
+		id = data.id;
+	}
 	delete data.id;
 	if(id != "0"){
 		Users.update(data,{
@@ -57,6 +87,38 @@ var deleteOne = function(venderId,callback){
 		});
 };
 
+var isVenderExists = function(access_token,callback){
+	Users.findOne({
+		attributes:['id','access_token','access_token'],
+		where:{"access_token":access_token,"type":"Seller"}
+	}).then(function(res){
+		var data = JSON.parse(JSON.stringify(res));
+		if(data.id){
+			callback(data.id);
+		}else{
+			callback(false);
+		}
+
+	}).catch(function(err){
+		console.log(err);
+		callback([]);
+	});
+};
+
+var getKitchenList = function(venderId,callback){
+	console.log(venderId);
+	Users.findAll({
+		attributes:['id','name','email','phone_number','profile_pic','status'],
+		where:{"vender_id":venderId,"type":"Kitchen"}
+	}).then(function(res){
+		var data = JSON.parse(JSON.stringify(res));
+		callback(data);
+	}).catch(function(err){
+		console.log(err);
+		callback([]);
+	});
+};
+
 module.exports = function(con){
 	connection = con;
 	Users = con.define('users',{
@@ -65,25 +127,21 @@ module.exports = function(con){
 			type: Sequelize.INTEGER,
 			primaryKey: true
 		},
-		first_name: {
+		name: {
 		    type: Sequelize.STRING,
-		    field: 'first_name'
-		},
-		last_name: {
-		    type: Sequelize.STRING,
-		    field: 'last_name'
+		    field: 'name'
 		},
 		email: {
 		    type: Sequelize.STRING,
 		    field: 'email'
 		},
-		phone_number: {
-		    type: Sequelize.STRING,
-		    field: 'phone_number'
-		},
 		password: {
 		    type: Sequelize.STRING,
 		    field: 'password'
+		},
+		phone_number: {
+		    type: Sequelize.STRING,
+		    field: 'phone_number'
 		},
 		profile_pic: {
 		    type: Sequelize.STRING,
@@ -96,6 +154,14 @@ module.exports = function(con){
 		verification_code: {
 		    type: Sequelize.STRING,
 		    field: 'verification_code'
+		},
+		type: {
+		    type: Sequelize.STRING,
+		    field: 'type'
+		},
+		otp: {
+		    type: Sequelize.INTEGER,
+		    field: 'otp'
 		},
 		last_login_ip: {
 		    type: Sequelize.STRING,
@@ -121,6 +187,10 @@ module.exports = function(con){
 			type: Sequelize.INTEGER,
 			primaryKey: true,
 			autoIncrement: true
+		},
+		user_id:{
+			field:'user_id',
+			type:Sequelize.INTEGER
 		},
 		address1:{
 			field:'address1',
@@ -160,8 +230,15 @@ module.exports = function(con){
 		}
 	});
 
+	Users.hasMany(UserAddress,{foreignKey: 'user_id'});
+
 	return {
 		login:login,
+		getList:getList,
+		addUpdate:addUpdate,
+		deleteOne:deleteOne,
+		isVenderExists:isVenderExists,
+		getKitchenList:getKitchenList
 	};
 
 };
