@@ -11,7 +11,6 @@ var accessTokenError = {
 	"message":"Access token not valied."
 };
 
-// var orm = new Sequelize('freelancer_oml','root','',{
 var orm = new Sequelize('oml','root','yahoo98663623!@',{
 	logging : function(query){
 		console.log('sql Log: ',query);
@@ -29,7 +28,6 @@ var orm = new Sequelize('oml','root','yahoo98663623!@',{
 });
 
 var Users = require('./models/user')(orm);
-var Product = require('./models/products')(orm);
 
 
 router.get('/',function(req,res){
@@ -111,76 +109,8 @@ router.post('/kitchen/add_edit',function(req,res){
 });
 
 router.post('/kitchen/delete',function(req,res){
-	if(req.body.access_token && req.body.kitchen_id){
+	if(req.body.email && req.body.password){
 
-	}else{
-		res.json(requiredError);
-	}
-});
-
-router.post('/product/list',function(req,res){
-	if(req.body.access_token){
-		Users.isVenderExists(req.body.access_token,function(venderId){
-			if(venderId){
-				Product.getList(venderId,function(response){
-					res.json({
-								"error_code":0,
-								"message":"Successfully.",
-								"data":response
-							});
-				});
-			}else{
-				res.json(accessTokenError);
-			}
-		});
-	}else{
-		res.json(requiredError);
-	}
-});
-
-router.post('/product/add_edit_data',function(req,res){
-	if(req.body.access_token){
-		Users.isVenderExists(req.body.access_token,function(venderId){
-			if(venderId){
-				Product.getProductTypesList(function(productTypes){
-					Product.getProductLocationsList(function(productLocations){
-						Product.getProductTimesList(function(productTimes){
-							res.json({
-										"error_code":0,
-										"message":"Successfully.",
-										"data":{
-											"product_types":productTypes,
-											"product_locations":productLocations,
-											"product_times":productTimes
-										}
-									});
-						});
-					});
-				});
-			}else{
-				res.json(accessTokenError);
-			}
-		});
-	}else{
-		res.json(requiredError);
-	}
-});
-
-router.post('/product/change_status',function(req,res){
-	if(req.body.access_token){
-		Users.isVenderExists(req.body.access_token,function(venderId){
-			if(venderId){
-				Products.getList(venderId,function(response){
-					res.json({
-								"error_code":0,
-								"message":"Successfully.",
-								"data":response
-							});
-				});
-			}else{
-				res.json(accessTokenError);
-			}
-		});
 	}else{
 		res.json(requiredError);
 	}

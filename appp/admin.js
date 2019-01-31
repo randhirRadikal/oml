@@ -2,8 +2,8 @@ var express = require('express');
 var router = express.Router();
 var Sequelize = require('sequelize');
 
-var base_url = "http://localhost:2213/";
-//var orm = new Sequelize('freelancer_oml','root','',{
+var base_url = "http://149.56.142.36:2213/";
+// var orm = new Sequelize('freelancer_oml','root','',{
 var orm = new Sequelize('oml','root','yahoo98663623!@',{
 	logging : function(query){
 		console.log('sql Log: ',query);
@@ -26,10 +26,6 @@ var ProductTypes = require('./models/product_type')(orm);
 
 router.get('/',function(req,res){
 	res.render('admin/login/index', { base_url:base_url,title: 'Home',data:{"username":"randhirjha2212@gmail.com","password":"123456"},error:false });
-});
-
-router.get('/logout',function(req,res){
-	res.redirect('/admin');
 });
 
 router.post('/',function(req,res){
@@ -158,9 +154,11 @@ router.get('/product_type/delete/:id',function(req,res){
 router.get('/product_type/add_edit/:id',function(req,res){
 	if(req.params.id == "0"){
 		res.render('admin/product_type/add_edit', { base_url:base_url,title: 'Home',data:{
-			name:"",
-			status:"",
-			id:"0"
+			first_name:"",
+			last_name:"",
+			email:"",
+			id:"0",
+			phone_number:""
 		},error:false });
 	}else{
 		ProductTypes.getDetails(req.params.id,function(response){
