@@ -3,6 +3,7 @@ var app = express();
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
+var cors = require('cors');
 var Sequelize = require('sequelize');
 
 var admin = require('./controller/admin');
@@ -15,6 +16,7 @@ app.set('view engine', 'ejs');
 app.use(express.static('views'));
 app.use(express.static('public'));
 app.use(express.static('images'));
+app.use(cors());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

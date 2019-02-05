@@ -4,13 +4,15 @@ var Products;
 var ProductTypes;
 var ProductLocations;
 var ProductTimes;
+var Kitchens;
 
 
-var getList = function(venderId,callback){
+var getList = function(venderId,kitchen_id,callback){
 	Products.findAll({
-		where:{"is_deleted":0,"vender_id":venderId},
+		attributes:['id','name','price','image','vender_id','kitchen_id','status'],
+		where:{"is_deleted":0,"vender_id":venderId,"kitchen_id":kitchen_id},
 		include: [
-	        { model: ProductLocations,required: false }
+	        { model: Kitchens,attributes:['id','name'],required: false }
 	    ],
 	}).then(function(res){
 		var data = JSON.parse(JSON.stringify(res));
@@ -121,6 +123,10 @@ module.exports = function(con){
 		    type: Sequelize.INTEGER,
 		    field: 'vender_id'
 		},
+		kitchen_id: {
+		    type: Sequelize.INTEGER,
+		    field: 'kitchen_id'
+		},
 		name: {
 		    type: Sequelize.STRING,
 		    field: 'name'
@@ -163,7 +169,7 @@ module.exports = function(con){
 		}
 	});
 
-	var ProductTypes = con.define('product_types',{
+	ProductTypes = con.define('product_types',{
 		id:{
 			field: 'id',
 			type: Sequelize.INTEGER,
@@ -183,7 +189,7 @@ module.exports = function(con){
 		}
 	});
 
-	var ProductLocations = con.define('product_locations',{
+	ProductLocations = con.define('product_locations',{
 		id:{
 			field: 'id',
 			type: Sequelize.INTEGER,
@@ -207,7 +213,7 @@ module.exports = function(con){
 		}
 	});
 
-	var ProductTimes = con.define('product_times',{
+	ProductTimes = con.define('product_times',{
 		id:{
 			field: 'id',
 			type: Sequelize.INTEGER,
@@ -228,12 +234,25 @@ module.exports = function(con){
 		status:{
 			type: Sequelize.INTEGER,
 			field: 'status'
+		}
+	});
+
+	Kitchens = con.define('kitchens',{
+		id:{
+			field: 'id',
+			type: Sequelize.INTEGER,
+			primaryKey: true
+		},
+		name: {
+		    type: Sequelize.STRING,
+		    field: 'name'
 		}
 	});
 
 	Products.belongsTo(ProductTypes,{foreignKey: 'product_type_id'});
 	Products.belongsTo(ProductLocations,{foreignKey: 'product_location_id'});
 	Products.belongsTo(ProductTimes,{foreignKey: 'product_time_id'});
+	Products.belongsTo(Kitchens,{foreignKey: 'kitchen_id'});
 
 	return {
 		getList:getList,

@@ -3,8 +3,8 @@ var router = express.Router();
 var Sequelize = require('sequelize');
 
 var base_url = "http://localhost:2213/";
-//var orm = new Sequelize('freelancer_oml','root','',{
-var orm = new Sequelize('oml','root','yahoo98663623!@',{
+var orm = new Sequelize('freelancer_oml','root','',{
+//var orm = new Sequelize('oml','root','yahoo98663623!@',{
 	logging : function(query){
 		console.log('sql Log: ',query);
 	},

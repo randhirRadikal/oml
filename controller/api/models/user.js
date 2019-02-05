@@ -4,7 +4,7 @@ var Users;
 
 var login = function(email,password,type,callback){
 	Users.findOne({
-		attributes:['id','name','email','phone_number','access_token'],
+		attributes:['id','name','email','phone_number','access_token','vender_id'],
 		where:{"email":email,"password":password,"type":type}
 	}).then(function(res){
 		var data = JSON.parse(JSON.stringify(res));
@@ -119,6 +119,32 @@ var getKitchenList = function(venderId,callback){
 	});
 };
 
+var getDetail = function(id,callback){
+	Users.findOne({
+		attributes:['id','name','email','phone_number','status'],
+		where:{"id":id,"type":"Kitchen"}
+	}).then(function(res){
+		var data = JSON.parse(JSON.stringify(res));
+		callback(data);
+	}).catch(function(err){
+		console.log(err);
+		callback(false);
+	});
+};
+
+var isKitchenExists = function(access_token,callback){
+	Users.findOne({
+		attributes:['id','name'],
+		where:{"access_token":access_token,"type":"Kitchen"}
+	}).then(function(res){
+		var data = JSON.parse(JSON.stringify(res));
+		callback(data);
+	}).catch(function(err){
+		console.log(err);
+		callback(false);
+	});
+};
+
 module.exports = function(con){
 	connection = con;
 	Users = con.define('users',{
@@ -126,6 +152,10 @@ module.exports = function(con){
 			field: 'id',
 			type: Sequelize.INTEGER,
 			primaryKey: true
+		},
+		vender_id: {
+		    type: Sequelize.INTEGER,
+		    field: 'vender_id'
 		},
 		name: {
 		    type: Sequelize.STRING,
@@ -238,7 +268,9 @@ module.exports = function(con){
 		addUpdate:addUpdate,
 		deleteOne:deleteOne,
 		isVenderExists:isVenderExists,
-		getKitchenList:getKitchenList
+		getKitchenList:getKitchenList,
+		getDetail:getDetail,
+		isKitchenExists:isKitchenExists
 	};
 
 };

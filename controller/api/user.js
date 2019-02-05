@@ -7,8 +7,8 @@ var requiredError = {
 	"message":"Please enter required fields."
 };
 
-//var orm = new Sequelize('freelancer_oml','root','',{
-var orm = new Sequelize('oml','root','yahoo98663623!@',{
+var orm = new Sequelize('freelancer_oml','root','',{
+//var orm = new Sequelize('oml','root','yahoo98663623!@',{
 	logging : function(query){
 		console.log('sql Log: ',query);
 	},
