@@ -12,7 +12,7 @@ var accessTokenError = {
 };
 
 var orm = new Sequelize('freelancer_oml','root','',{
-// var orm = new Sequelize('oml','root','yahoo98663623!@',{
+//var orm = new Sequelize('oml','root','yahoo98663623!@',{
 	logging : function(query){
 		console.log('sql Log: ',query);
 	},
@@ -278,19 +278,25 @@ router.post('/product/list',function(req,res){
 
 router.post('/product/add_edit_data',function(req,res){
 	if(req.body.access_token){
-		Users.isVenderExists(req.body.access_token,function(venderId){
-			if(venderId){
+		Users.isKitchenExists(req.body.access_token,function(kitchenDetails){
+			if(kitchenDetails){
 				Product.getProductTypesList(function(productTypes){
 					Product.getProductLocationsList(function(productLocations){
 						Product.getProductTimesList(function(productTimes){
-							res.json({
-								"error_code":0,
-								"message":"Successfully.",
-								"data":{
-									"product_types":productTypes,
-									"product_locations":productLocations,
-									"product_times":productTimes
-								}
+							Product.getHealthConditionOptionsList(function(healthConditionOptions){
+								Product.getPrepStyleOptionsList(function(prepStyleOptions){
+									res.json({
+										"error_code":0,
+										"message":"Successfully.",
+										"data":{
+											"product_types":productTypes,
+											"product_locations":productLocations,
+											"product_times":productTimes,
+											"health_condition_options":healthConditionOptions,
+											"prep_style_options":prepStyleOptions,
+										}
+									});
+								});
 							});
 						});
 					});

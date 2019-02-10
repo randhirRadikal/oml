@@ -93,8 +93,12 @@ var isVenderExists = function(access_token,callback){
 		where:{"access_token":access_token,"type":"Seller"}
 	}).then(function(res){
 		var data = JSON.parse(JSON.stringify(res));
-		if(data.id){
-			callback(data.id);
+		if(data){
+			if(data.id){
+				callback(data.id);
+			}else{
+				callback(false);
+			}
 		}else{
 			callback(false);
 		}

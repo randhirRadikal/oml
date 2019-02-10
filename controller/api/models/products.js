@@ -5,6 +5,8 @@ var ProductTypes;
 var ProductLocations;
 var ProductTimes;
 var Kitchens;
+var PrepStyleOptions;
+var HealthConditionOptions;
 
 
 var getList = function(venderId,kitchen_id,callback){
@@ -79,7 +81,10 @@ var deleteOne = function(venderId,callback){
 };
 
 var getProductTypesList = function(callback){
-	ProductTypes.findAll({}).then(function(res){
+	ProductTypes.findAll({
+		attributes:['id','name','status'],
+		where:{"status":1}
+	}).then(function(res){
 		var data = JSON.parse(JSON.stringify(res));
 		callback(data);
 	}).catch(function(){
@@ -101,6 +106,28 @@ var getProductLocationsList = function(callback){
 
 var getProductTimesList = function(callback){
 	ProductTimes.findAll({
+		attributes:['id','name','status'],
+		where:{"status":1}
+	}).then(function(res){
+		var data = JSON.parse(JSON.stringify(res));
+		callback(data);
+	}).catch(function(){
+		callback([]);
+	});
+};
+var getHealthConditionOptionsList = function(callback){
+	HealthConditionOptions.findAll({
+		attributes:['id','name','status'],
+		where:{"status":1}
+	}).then(function(res){
+		var data = JSON.parse(JSON.stringify(res));
+		callback(data);
+	}).catch(function(){
+		callback([]);
+	});
+};
+var getPrepStyleOptionsList = function(callback){
+	PrepStyleOptions.findAll({
 		attributes:['id','name','status'],
 		where:{"status":1}
 	}).then(function(res){
@@ -237,6 +264,46 @@ module.exports = function(con){
 		}
 	});
 
+	PrepStyleOptions = con.define('prep_style_options',{
+		id:{
+			field: 'id',
+			type: Sequelize.INTEGER,
+			primaryKey: true
+		},
+		name: {
+		    type: Sequelize.STRING,
+		    field: 'name'
+		},
+		created: {
+		    type: Sequelize.DATE,
+		    field: 'created'
+		},
+		status:{
+			type: Sequelize.INTEGER,
+			field: 'status'
+		}
+	});
+
+	HealthConditionOptions = con.define('health_condition_options',{
+		id:{
+			field: 'id',
+			type: Sequelize.INTEGER,
+			primaryKey: true
+		},
+		name: {
+		    type: Sequelize.STRING,
+		    field: 'name'
+		},
+		created: {
+		    type: Sequelize.DATE,
+		    field: 'created'
+		},
+		status:{
+			type: Sequelize.INTEGER,
+			field: 'status'
+		}
+	});
+
 	Kitchens = con.define('kitchens',{
 		id:{
 			field: 'id',
@@ -253,6 +320,8 @@ module.exports = function(con){
 	Products.belongsTo(ProductLocations,{foreignKey: 'product_location_id'});
 	Products.belongsTo(ProductTimes,{foreignKey: 'product_time_id'});
 	Products.belongsTo(Kitchens,{foreignKey: 'kitchen_id'});
+	Products.belongsTo(PrepStyleOptions,{foreignKey: 'kitchen_id'});
+	Products.belongsTo(HealthConditionOptions,{foreignKey: 'kitchen_id'});
 
 	return {
 		getList:getList,
@@ -261,7 +330,9 @@ module.exports = function(con){
 		deleteOne:deleteOne,
 		getProductTypesList:getProductTypesList,
 		getProductLocationsList:getProductLocationsList,
-		getProductTimesList:getProductTimesList
+		getProductTimesList:getProductTimesList,
+		getHealthConditionOptionsList:getHealthConditionOptionsList,
+		getPrepStyleOptionsList:getPrepStyleOptionsList
 	};
 
 };
